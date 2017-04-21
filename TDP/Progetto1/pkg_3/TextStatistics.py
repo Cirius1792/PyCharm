@@ -1,5 +1,6 @@
 from TDP.TdP_collections.map.binary_search_tree import TreeMap
 from TDP.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
+from TDP.Progetto1.pkg_4.DownHeap import down_heap_priority_queue
 import math
 
 
@@ -15,6 +16,7 @@ class TextStatistics:
 
     def _factory(self):
         self.words = TreeMap()
+
     def __init__(self, path):
 
         self._factory()
@@ -62,10 +64,10 @@ class TextStatistics:
 
     def mostFrequent(self, j):
         """restituisce la lista delle j key più frequenti"""
-        #l = nlargest(j, self.words, key=self.words.get)
-        hp = HeapPriorityQueue()
+
+        hp = down_heap_priority_queue()
         for key in self.words:
-            hp.add(-(self.words[key]), key)
+            hp.add((self.words[key]), key)
         l = []
         for i in range(1, j+1):
             l.append(hp.remove_min()[1])
@@ -77,8 +79,8 @@ class TextStatistics:
         pass
 
 
-t = TextStatistics("C:\\Users\CiroLucio\Desktop\\test2.txt")
-print("numero parole: ",len(t))
-print("average:\t", t.average())
-print("deviazione standart:\t", t.devStd())
-print("5 parole più frequenti:\t", t.mostFrequent(5))
+# t = TextStatistics("/Users/CLT/Desktop/Text-1.txt")
+# print("numero parole: ",len(t))
+# print("average:\t", t.average())
+# print("deviazione standart:\t", t.devStd())
+# print("5 parole più frequenti:\t", t.mostFrequent(5))
