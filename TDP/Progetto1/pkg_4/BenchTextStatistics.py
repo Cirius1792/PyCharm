@@ -39,4 +39,4 @@ print("deviazione standart:\t", t.devStd())
 print("5 parole più frequenti:\t", t.mostFrequent(5))
 print("ribilanciamenti:\t",t.words.rebalancingOp)
 
-#print("#################>>R-B<<#################")
+print("#################>>R-B<<#################")
