@@ -1,7 +1,7 @@
-from TdP_collections.map.binary_search_tree import TreeMap
-from TdP_collections.map.avl_tree import AVLTreeMap
-from TdP_collections.map.red_black_tree import RedBlackTreeMap
-from Progetto1.pkg_3.TextStatistics import TextStatistics
+from TDP.TdP_collections.map.binary_search_tree import TreeMap
+from TDP.TdP_collections.map.avl_tree import AVLTreeMap
+from TDP.TdP_collections.map.red_black_tree import RedBlackTreeMap
+from TDP.Progetto1.pkg_3.TextStatistics import TextStatistics
 
 class TextStatisticsAVL(TextStatistics):
 
@@ -27,13 +27,13 @@ class TextStatisticsRB(TextStatistics):
 
 
 # print("#################>>BST<<#################")
-# t = TextStatistics("/Users/CLT/Desktop/Text-1.txt")
+# t = TextStatistics("C:\\Users\CiroLucio\Desktop\\test2.txt")
 # print("average:\t", t.average())
 # print("deviazione standart:\t", t.devStd())
 # print("5 parole più frequenti:\t", t.mostFrequent(5))
 
 print("#################>>AVL<<#################")
-t = TextStatisticsAVL("/Users/CLT/Desktop/Text-1.txt")
+t = TextStatisticsAVL("C:\\Users\CiroLucio\Desktop\\test2.txt")
 print("average:\t", t.average())
 print("deviazione standart:\t", t.devStd())
 print("5 parole più frequenti:\t", t.mostFrequent(5))

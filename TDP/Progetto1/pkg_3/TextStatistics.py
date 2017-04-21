@@ -1,9 +1,7 @@
-from TdP_collections.map.binary_search_tree import TreeMap
-from TdP_collections.map.avl_tree import AVLTreeMap
-from TdP_collections.map.red_black_tree import RedBlackTreeMap
-from TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
+from TDP.TdP_collections.map.binary_search_tree import TreeMap
+from TDP.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
 import math
-from heapq import nlargest
+
 
 
 
@@ -79,7 +77,8 @@ class TextStatistics:
         pass
 
 
-t = TextStatistics("/Users/CLT/Desktop/Text-1.txt")
+t = TextStatistics("C:\\Users\CiroLucio\Desktop\\test2.txt")
+print("numero parole: ",len(t))
 print("average:\t", t.average())
 print("deviazione standart:\t", t.devStd())
 print("5 parole più frequenti:\t", t.mostFrequent(5))
