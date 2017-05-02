@@ -1,165 +1,174 @@
-from TDP.TdP_collections.map.binary_search_tree import TreeMap
-from TDP.TdP_collections.map.red_black_tree import RedBlackTreeMap
-from TDP.Progetto1.pkg_1.TwoDTreeMap import TwoDTreeMap
-from TDP.TdP_collections.tree.linked_binary_tree import LinkedBinaryTree
-from TDP import util
+from TdP_collections.map.red_black_tree import RedBlackTreeMap
+from pkg_1.TwoDTreeMap import TwoDTreeMap
 
 
-class TreeTransform(TwoDTreeMap, RedBlackTreeMap):
+class TreeTransform(RedBlackTreeMap, TwoDTreeMap):
+    class Position(TwoDTreeMap.Position):
+        """An abstraction representing the location of a single element."""
 
-    # class Position(TwoDTreeMap.Position):
-    #
-    #     def key(self, j=0):
-    #         """Return key of map's key-value pair."""
-    #         return self.element()[j]._key
-    #
-    #     def value(self, j=0):
-    #         """Return value of map's key-value pair."""
-    #         return self.element()[j]._value
-
-    class _Node(TwoDTreeMap._Node):
-
-        __slots__ = '_red', '_left', '_right'
-
-        def __init__(self, param1=None, parent=None, left=None, right=None):
-            if isinstance(param1, int):
-                TwoDTreeMap._Node.__init__(self, param1, parent)
+        def element(self):
+            """Return the element stored at this Position."""
+            if isinstance(self._node, RedBlackTreeMap._Node):
+                return self._node._element
             else:
-                TwoDTreeMap._Node.__init__(self, 2, parent)
-                self.insert_element(param1)
-            self._right = None
-            self._left = None
-            self._red = True  # new node red by default
-            if left is not None:
-                self._set_left(left)
-            if right is not None:
-                self._set_right(right)
+                return self._node.get_element(self._elem_index)
 
-        def connect_child(self, child_index,child):
-            if child_index == 0:
-                self._left = child
-            elif child_index == 1:
-                self._right = child
-            super().connect_child( child_index, child)
-
-        def disconnect_child(self, child_index):
-            if child_index == 0:
-                self._left = None
-            elif child_index == 1:
-                self._right = None
-            super().disconnect_child(child_index)
-
-        def _get_left(self):
-            return self._left
-
-        def _get_right(self):
-            return self._right
-
-        def _set_left(self, child):
-            self.connect_child(0, child)
-            self._left = child
-
-        def _set_right(self, child):
-            self.connect_child(1, child)
-            self._right = child
-
-    __slots__ = "_rb", "_order"
+    __slots__ = '_rb'
 
     def __init__(self, rb=True):
         self._rb = rb
-        if self._rb:
+        if rb:
             RedBlackTreeMap.__init__(self)
-            self._order = 2
         else:
             TwoDTreeMap.__init__(self)
 
-    def __delitem__(self, k):
-        if self._rb:
-           RedBlackTreeMap.__delitem__(self, k)
-        else:
-            TwoDTreeMap.__delitem__(self, k)
-
     def __setitem__(self, k, v):
+        return RedBlackTreeMap.__setitem__(self, k, v) if self._rb else TwoDTreeMap.__setitem__(self, k, v)
+
+    def children(self, p):
+        return RedBlackTreeMap.children(self, p) if self._rb else TwoDTreeMap.children(self, p)
+
+    def after(self, p):
+        return RedBlackTreeMap.after(self, p) if self._rb else TwoDTreeMap.after(self, p)
+
+    def num_children(self, p):
+        return RedBlackTreeMap.num_children(self, p) if self._rb else TwoDTreeMap.num_children(self, p)
+
+    def left(self, p):
+        return RedBlackTreeMap.left(self, p) if self._rb else TwoDTreeMap.left(self, p)
+
+    def delete(self, p):
+        return RedBlackTreeMap.delete(self, p) if self._rb else TwoDTreeMap.delete(self, p)
+
+    def right(self, p):
+        return RedBlackTreeMap.right(self, p) if self._rb else TwoDTreeMap.right(self, p)
+
+    def _subtree_search(self, p, k):
+        return RedBlackTreeMap._subtree_search(self, p, k) if self._rb else TwoDTreeMap._subtree_search(self, p, k)
+
+    def _subtree_last_position(self, p):
+        return RedBlackTreeMap._subtree_last_position(self, p) if self._rb else TwoDTreeMap._subtree_last_position(self,
+                                                                                                                   p)
+
+    def before(self, p):
+        return RedBlackTreeMap.before(self, p) if self._rb else TwoDTreeMap.before(self, p)
+
+    def _make_position(self, node):
+        return RedBlackTreeMap._make_position(self, node) if self._rb else TwoDTreeMap._make_position(self, node)
+
+    def _validate(self, p):
+        return RedBlackTreeMap._validate(self, p) if self._rb else TwoDTreeMap._validate(self, p)
+
+    def transform(self):
         if self._rb:
-            RedBlackTreeMap.__setitem__(self, k, v)
+            self._rb2td(self.root())
+            self._rb = False
         else:
-            TwoDTreeMap.__setitem__(self, k, v)
+            self._td2rb(self.root())
+            self._rb = True
 
-    def __iter__(self):
-        if self._rb:
-            return RedBlackTreeMap.__iter__(self)
-        else:
-            return TwoDTreeMap.__iter__(self)
+    def _rb2td(self, p):
+        node = TwoDTreeMap._DNode()
+        node.insert_element(p.element())
+        node._parent = p._node._parent
+        left = self.left(p)
+        right = self.right(p)
+        i = 0
+        if left:
+            if self._is_red(left):
+                node.insert_element(left.element())
+                if left._node._left:
+                    node.connect_child(i, left._node._left)
+                    i += 1
+                if left._node._right:
+                    node.connect_child(i, left._node._right)
+                    i += 1
+            else:
+                node.connect_child(i, left._node)
+                i += 1
+        if right:
+            if self._is_red(right):
+                node.insert_element(right.element())
+                if right._node._left:
+                    node.connect_child(i, right._node._left)
+                    i += 1
+                if right._node._right:
+                    node.connect_child(i, right._node._right)
+            else:
+                node.connect_child(i, right._node)
+        if self.is_root(p):
+            self._root = node
+        p = TwoDTreeMap._make_position(self, node)
+        for i in range(len(p._node._children)):
+            new_p = self._rb2td(RedBlackTreeMap._make_position(self, p._node._children[i]))
+            p._node.disconnect_child(i)
+            p._node.connect_child(i, new_p._node)
+        return p
 
+    def _td2rb(self, p):
+        l = self.num_elements(p)
+        c = self.num_children(p)
+        if l == 1:
+            node = RedBlackTreeMap._Node(p._node._elements[0], p._node._parent)
+            node._red = False
+            node._right = p._node._children[1] if c != 0 else None
+            node._left = p._node._children[0] if c != 0 else None
+            if c != 0:
+                new_p_left = self._td2rb(TwoDTreeMap._make_position(self, node._left))
+                new_p_right = self._td2rb(TwoDTreeMap._make_position(self, node._right))
+                node._left = new_p_left._node
+                node._right = new_p_right._node
+                node._left._parent = node
+                node._right._parent = node
+        elif l == 2:
+            node = RedBlackTreeMap._Node(p._node._elements[0], p._node._parent)
+            node._red = False
+            node._left = p._node._children[0] if c != 0 else None
+            node_red = RedBlackTreeMap._Node(p._node._elements[1], node)
+            node._right = node_red
+            node_red._right = p._node._children[2] if c != 0 else None
+            node_red._left = p._node._children[1] if c != 0 else None
+            if c != 0:
+                new_p_left = self._td2rb(TwoDTreeMap._make_position(self, node._left))
+                new_child_left = self._td2rb(TwoDTreeMap._make_position(self, node_red._left))
+                new_child_right = self._td2rb(TwoDTreeMap._make_position(self, node_red._right))
+                node._left = new_p_left._node
+                node._right._right = new_child_right._node
+                node._right._left = new_child_left._node
+                node._right._right._parent = node._right
+                node._right._left._parent = node._right
+                node._left._parent = node
+                node._right._parent = node
+        elif l == 3:
+            node = RedBlackTreeMap._Node(p._node._elements[1], p._node._parent)
+            node._red = False
+            child_red_right = RedBlackTreeMap._Node(p._node._elements[2], node)
+            child_red_left = RedBlackTreeMap._Node(p._node._elements[0], node)
+            node._right = child_red_right
+            node._left = child_red_left
+            child_red_left._right = p._node._children[1] if c != 0 else None
+            child_red_left._left = p._node._children[0] if c != 0 else None
+            child_red_right._right = p._node._children[3] if c != 0 else None
+            child_red_right._left = p._node._children[2] if c != 0 else None
+            if c != 0:
+                new_left_left = self._td2rb(TwoDTreeMap._make_position(self, child_red_left._left))
+                new_left_right = self._td2rb(TwoDTreeMap._make_position(self, child_red_left._right))
+                new_right_left = self._td2rb(TwoDTreeMap._make_position(self, child_red_right._left))
+                new_right_right = self._td2rb(TwoDTreeMap._make_position(self, child_red_right._right))
+                node._left._right = new_left_right._node
+                node._left._left = new_left_left._node
+                node._right._right = new_right_right._node
+                node._right._left = new_right_left._node
 
-    def _add_left(self, p, e):
-        """Create a new left child for Position p, storing element e.
+                node._left._left._parent = node._left
+                node._left._right._parent = node._left
+                node._right._left._parent = node._right
+                node._right._right._parent = node._right
 
-         Return the Position of new node.
-         Raise ValueError if Position p is invalid or p already has a left child.
-         """
-        node = self._validate(p)
-        if node._get_left() is not None:
-            raise ValueError('Left child exists')
-        self._size += 1
-        node._set_left(self._Node(e, node))  # node is its parent
-        return self._make_position(node._get_left())
+                node._left._parent = node
+                node._right._parent = node
+        if self.is_root(p):
+            self._root = node
+        p = RedBlackTreeMap._make_position(self, node)
 
-    def _add_right(self, p, e):
-        node = self._validate(p)
-        if node._get_right() is not None:
-            raise ValueError('Left child exists')
-        self._size += 1
-        node._set_right(self._Node(e, node))  # node is its parent
-        return self._make_position(node._get_right())
-
-    def _relink(self, parent, child, make_left_child):
-        """Relink parent node with child node (we allow child to be None)."""
-        if make_left_child:  # make it a left child
-            #parent._left = child
-            parent._set_left(child)
-        else:  # make it a right child
-            #parent._right = child
-            parent._set_right(child)
-        if child is not None:  # make child point to parent
-            child._parent = parent
-
-    # def _subtree_search(self, p, k):
-    #     if p._node.find_element(k) or p._node.leftmost_child():
-    #         return p
-    #     k_min = p._node.get_element(0)._key
-    #     k_max = p._node.get_element(p._node._n_elements - 1)._key
-    #     if k < k_min:
-    #         return self._subtree_search(self.Position(self, p._node.get_child(0)), k)
-    #     elif k < k_max:
-    #         i = 0
-    #         while i < p._node._n_elements - 1:
-    #             if k < p._node.get_element(i)._key:
-    #                 return self._subtree_search(self.Position(self, p._node.get_child(i)), k)
-    #             i += 1
-    #     else:
-    #         return self._subtree_search(self.Position(self, p._node.get_child(p._node._n_children - 1)), k)
-
-
-if __name__ == '__main__':
-
-    pTree = TreeTransform()
-    dTree = TwoDTreeMap()
-    dic = util.rand_dict(100, 1, 100)
-
-    pTree[11] = 1
-    pTree[2] = 1
-    pTree[14] = 1
-    pTree[1] = 1
-    pTree[7] = 1
-    pTree[15] = 1
-    pTree[5] = 1
-    pTree[8] = 1
-#    for key in dic:
-#        pTree[key] = dic.get(key)
-
-
-    for k in pTree:
-        print('key:',k ,' value:',pTree[k])
-    print('len:',len(pTree))
-
+        return p

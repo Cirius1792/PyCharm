@@ -1,5 +1,5 @@
-from TDP.TdP_collections.map.map_base import MapBase
-from TDP.TdP_collections.map.binary_search_tree import TreeMap
+from TdP_collections.map.map_base import MapBase
+from TdP_collections.map.binary_search_tree import TreeMap
 
 
 class OrderException(Exception):
@@ -79,7 +79,6 @@ class TwoDTreeMap(TreeMap, MapBase):
                     return index
                 else:
                     return None
-            return None
 
         def insert_element(self, elem):
             """Insert the given element _Item in the node.
@@ -124,7 +123,6 @@ class TwoDTreeMap(TreeMap, MapBase):
             if node._elements[i]._key > key:
                 return self._make_position(node.get_child(i))
         return self._make_position(node.get_child(i + 1))
-
 
     def num_children(self, p):
         """Return the number of children of Position p."""
