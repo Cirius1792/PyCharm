@@ -32,11 +32,11 @@ class TwoDTreeMap(TreeMap, MapBase):
             return self._elem_index
 
     # -------------------------- nested _Node class --------------------------
-    class _Node:
+    class _DNode:
         """Lightweight, nonpublic class for storing a node."""
         __slots__ = '_elements', '_parent', '_children', '_order'
 
-        def __init__(self, order, parent=None):
+        def __init__(self, order=4, parent=None):
             self._order = order
             self._elements = []  # array of data
             self._parent = parent
@@ -85,6 +85,10 @@ class TwoDTreeMap(TreeMap, MapBase):
 
             Return the index of elem within the list of elements.
             """
+            index = self.find_element(elem._key)
+            if index:
+                self._elements[index]._value = elem._value
+                return index
             self._elements.append(elem)
             self._elements.sort()
             return self._elements.index(elem)
@@ -148,8 +152,16 @@ class TwoDTreeMap(TreeMap, MapBase):
             else:
                 p = self.get_child(p, k)
 
-    # --------------------- public methods providing "positional" support ---------------------
+    def _subtree_last_position(self, p):
+        """Return Position of last item in subtree rooted at p."""
+        walk = p
+        walk.set_index(self.num_elements(walk) - 1)
+        while self.right(walk) is not None:  # keep walking right
+            walk = self.right(walk)
+            walk.set_index(self.num_elements(walk) - 1)
+        return walk
 
+    # --------------------- public methods providing "positional" support ---------------------
     def left(self, p):
         """Return the Position of p's left child (or None if no left child)."""
         return self._make_position(p._node.get_child(p.get_index())) if not self.is_leaf(p) else None
@@ -367,10 +379,10 @@ class TwoDTreeMap(TreeMap, MapBase):
             last_child = node.disconnect_child(-1)
             second_last_child = node.disconnect_child(-1)
 
-        n_right = self._Node(self._order)  # costruzione del nuovo nodo
+        n_right = self._DNode(self._order)  # costruzione del nuovo nodo
 
         if node == self._root:  # se il nodo da splittare è la root,
-            self._root = self._Node(self._order)  # si crea una nuova root
+            self._root = self._DNode(self._order)  # si crea una nuova root
             parent = self._root  # la nuova root diventa il parent del nodo corrent
             self._root.connect_child(0, node)  # il nodo corrente viene connesso al parent
         else:  # se il nodo corrente non è la root,
@@ -397,7 +409,7 @@ class TwoDTreeMap(TreeMap, MapBase):
         new_item = self._Item(k, v)
 
         if self.is_empty():
-            self._root = self._Node(self._order)
+            self._root = self._DNode(self._order)
             self._root.insert_element(new_item)
         else:
             p = self.find_position(k)
@@ -444,5 +456,3 @@ class TwoDTreeMap(TreeMap, MapBase):
                 print(level)
         else:
             print('Albero vuoto!')
-
-
