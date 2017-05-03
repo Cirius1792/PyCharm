@@ -1,5 +1,5 @@
-from ..TdP_collections.map.red_black_tree import RedBlackTreeMap
-from ..pkg_1.TwoDTreeMap import TwoDTreeMap
+from TDP.Progetto1.TdP_collections.map.red_black_tree import RedBlackTreeMap
+from TDP.Progetto1.pkg_1.TwoDTreeMap import TwoDTreeMap
 
 
 class TreeTransform(RedBlackTreeMap, TwoDTreeMap):
