@@ -1,8 +1,7 @@
-from TDP.TdP_collections.map.binary_search_tree import TreeMap
-from TDP.TdP_collections.map.avl_tree import AVLTreeMap
-from TDP.TdP_collections.map.red_black_tree import RedBlackTreeMap
-from TDP.Progetto1.pkg_3.TextStatistics import TextStatistics
-import time
+from TDP.Progetto1.TdP_collections.map.binary_search_tree import TreeMap
+from TDP.Progetto1.TdP_collections.map.avl_tree import AVLTreeMap
+from TDP.Progetto1.TdP_collections.map.red_black_tree import RedBlackTreeMap
+
 
 
 class BenchBST(TreeMap):
@@ -66,75 +65,3 @@ class BenchRBTree(RedBlackTreeMap):
     def get_statistics(self):
         return {'height':self.height(),'rotations':self._nRotations, 'transformations': self._nTransformations, 'color_changes': self._nColor}
 
-if __name__ == '__main__':
-    performances = dict()
-    print("\n\n#################>>BST<<#################")
-    start = time.time()
-    t = TextStatistics("/Users/CLT/Downloads/AliceNelPaeseDelleMeraviglie.txt", BenchBST())
-    stop = time.time()
-    performances['BST'] = round(stop-start, 5)
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-
-    print("\n\n#################>>AVL<<#################")
-    start = time.time()
-    t = TextStatistics("/Users/CLT/Downloads/AliceNelPaeseDelleMeraviglie.txt", BenchAVLTree())
-    stop = time.time()
-    performances['AVL'] = round(stop-start, 5)
-    print("num parole:\t",len(t))
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-    print("\n\n#################>>R-B<<#################")
-    t = TextStatistics("/Users/CLT/Downloads/AliceNelPaeseDelleMeraviglie.txt", BenchRBTree())
-    stop = time.time()
-    performances['RB'] = round(stop-start, 5)
-    print("num parole:\t",len(t))
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-
-    print(performances)
-
-    performances = dict()
-    print("\n\n#################>>BST<<#################")
-    start = time.time()
-    t = TextStatistics("/Users/CLT/Downloads/MobyDick.txt", BenchBST())
-    stop = time.time()
-    performances['BST'] = round(stop-start, 5)
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-
-    print("\n\n#################>>AVL<<#################")
-    start = time.time()
-    t = TextStatistics("/Users/CLT/Downloads/MobyDick.txt", BenchAVLTree())
-    stop = time.time()
-    performances['AVL'] = round(stop-start, 5)
-    print("num parole:\t",len(t))
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-    print("\n\n#################>>R-B<<#################")
-    t = TextStatistics("/Users/CLT/Downloads/MobyDick.txt", BenchRBTree())
-    stop = time.time()
-    performances['RB'] = round(stop-start, 5)
-    print("num parole:\t",len(t))
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("trasformations:\n", t._words.get_statistics())
-    del t
-
-    print(performances)

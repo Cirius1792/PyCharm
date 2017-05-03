@@ -1,4 +1,4 @@
-from TDP.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
+from TDP.Progetto1.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
 
 class reverse_heap_priority_queue(HeapPriorityQueue):
 

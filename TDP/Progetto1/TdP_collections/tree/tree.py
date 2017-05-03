@@ -145,7 +145,7 @@ class Tree:
   def breadthfirst(self):
     """Generate a breadth-first iteration of the positions of the alberi."""
     if not self.is_empty():
-      fringe = LinkedQueue()             # known positions not yet yielded
+      fringe = ArrayQueue()             # known positions not yet yielded
       fringe.enqueue(self.root())        # starting with the root
       while not fringe.is_empty():
         p = fringe.dequeue()             # remove from front of the queue

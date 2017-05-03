@@ -1,12 +1,16 @@
-from TDP.TdP_collections.map.binary_search_tree import TreeMap
-from TDP.TdP_collections.map.avl_tree import AVLTreeMap
-from TDP.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQueue
+from TDP.Progetto1.TdP_collections.map.binary_search_tree import TreeMap
+from TDP.Progetto1.TdP_collections.map.avl_tree import AVLTreeMap
 from TDP.Progetto1.pkg_4.ReverseHeap import reverse_heap_priority_queue
 import math
 import time
 
 
+class NotATree(Exception):
+    def __init__(self, value):
+        self.value = value
 
+    def __str__(self):
+        return self.value
 
 class TextStatistics:
     """permette di elaborare statistiche su un insieme di stringhe. La classe deve utilizzare un albero binario di
@@ -25,7 +29,8 @@ class TextStatistics:
             self._words = AVLTreeMap()
         elif isinstance(tree, TreeMap):
             self._words = tree
-
+        else:
+            raise NotATree('The tree argument does not implement TreeMap')
         self._word_length = 0
         f = open(path)
         for line in f:

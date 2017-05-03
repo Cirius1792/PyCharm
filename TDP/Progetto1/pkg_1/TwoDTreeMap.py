@@ -1,5 +1,5 @@
-from TdP_collections.map.map_base import MapBase
-from TdP_collections.map.binary_search_tree import TreeMap
+from TDP.Progetto1.TdP_collections.map.map_base import MapBase
+from TDP.Progetto1.TdP_collections.map.binary_search_tree import TreeMap
 
 
 class OrderException(Exception):
@@ -149,6 +149,7 @@ class TwoDTreeMap(TreeMap, MapBase):
                 p = self.get_child(p, k)
 
     # --------------------- public methods providing "positional" support ---------------------
+
     def left(self, p):
         """Return the Position of p's left child (or None if no left child)."""
         return self._make_position(p._node.get_child(p.get_index())) if not self.is_leaf(p) else None
@@ -443,3 +444,5 @@ class TwoDTreeMap(TreeMap, MapBase):
                 print(level)
         else:
             print('Albero vuoto!')
+
+

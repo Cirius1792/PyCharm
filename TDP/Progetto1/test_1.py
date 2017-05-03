@@ -1,4 +1,5 @@
-from TDP.Progetto1.pkg_1.TwoDTreeMap_new import TwoDTreeMap
+from TDP.Progetto1.pkg_1.TwoDTreeMap import TwoDTreeMap
+
 from TDP import util
 
 if __name__ == '__main__':
@@ -12,6 +13,8 @@ if __name__ == '__main__':
     dic = util.rand_dict(30, 1, 100)
     for k in dic:
         pTree[k] = dic.get(k)
+    for i in range(0, len(dic)):
+        print(i in pTree)
 
 
     print('\n---- Albero (2, 4)  ----')
