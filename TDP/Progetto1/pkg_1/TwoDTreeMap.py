@@ -86,7 +86,7 @@ class TwoDTreeMap(TreeMap, MapBase):
             Return the index of elem within the list of elements.
             """
             index = self.find_element(elem._key)
-            if index:
+            if index is not None:
                 self._elements[index]._value = elem._value
                 return index
             self._elements.append(elem)
@@ -411,13 +411,16 @@ class TwoDTreeMap(TreeMap, MapBase):
         if self.is_empty():
             self._root = self._DNode(self._order)
             self._root.insert_element(new_item)
+            self._size += 1
         else:
             p = self.find_position(k)
+            if p._node.find_element(k) is None:
+                self._size += 1
             p._node.insert_element(new_item)
             while p is not None and self.overflow(p):
                 self.split(p)
                 p = self.parent(p)
-        self._size += 1
+
 
     # --------------------- methods for displaying the tree ---------------------
     def children(self, p):
@@ -456,3 +459,4 @@ class TwoDTreeMap(TreeMap, MapBase):
                 print(level)
         else:
             print('Albero vuoto!')
+

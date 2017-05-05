@@ -21,6 +21,9 @@ class TextStatistics:
 
     __slots__ = '_words', '_word_length'
 
+    WORD = 'word'
+    OCCURRENCES = 'occurrences'
+
     def __init__(self, path, tree=None):
 
         """Il testo presente nel file alla posizione indicata dal parametro path viene elaborato, il numero di occorrenze
@@ -80,7 +83,7 @@ class TextStatistics:
         l = []
         for i in range(1, j+1):
             tmp = hp.remove_min()
-            l.append({'word': tmp[1], 'occurrences': tmp[0]})
+            l.append({self.WORD: tmp[1], self.OCCURRENCES: tmp[0]})
         return l
 
     def quartile(self, j = 1):
@@ -112,15 +115,3 @@ class TextStatistics:
             i += 1
         l.insert(i, obj)
 
-if __name__ == '__main__':
-    start = time.time()
-    t = TextStatistics("C:\\Users\\CiroLucio\\Desktop\\Capitolo_1.txt")
-    stop = time.time()
-    print("tempo richiesto per l'elaborazione: ", stop-start)
-    print("numero parole: ",len(t))
-    print("average:\t", t.average())
-    print("deviazione standart:\t", t.devStd())
-    print("5 parole più frequenti:\t", t.mostFrequent(5))
-    print("quartile 1: ", t.quartile(1))
-    print("quartile 2: ", t.quartile(2))
-    print("quartile 3: ", t.quartile(3))

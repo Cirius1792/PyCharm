@@ -1,5 +1,5 @@
 from TDP.Progetto1.pkg_1.TwoDTreeMap import TwoDTreeMap
-
+from TDP.Progetto1.pkg_4.BenchTextStatistics import BenchTwoDTreeMap
 from TDP import util
 
 if __name__ == '__main__':
@@ -8,13 +8,12 @@ if __name__ == '__main__':
     print("----------------------------------------------------------------")
 
     print('\n------------ Test Albero (2, 4) ---------------------')
-    pTree = TwoDTreeMap()
+    pTree = BenchTwoDTreeMap()
 
-    dic = util.rand_dict(30, 1, 100)
+    dic = util.rand_dict(2000, 1, 3000)
     for k in dic:
         pTree[k] = dic.get(k)
-    for i in range(0, len(dic)):
-        print(i in pTree)
+    print(pTree.get_statistics())
 
 
     print('\n---- Albero (2, 4)  ----')

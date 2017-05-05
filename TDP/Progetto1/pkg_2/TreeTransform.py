@@ -3,6 +3,7 @@ from TDP.Progetto1.pkg_1.TwoDTreeMap import TwoDTreeMap
 
 
 class TreeTransform(RedBlackTreeMap, TwoDTreeMap):
+
     class Position(TwoDTreeMap.Position):
         """An abstraction representing the location of a single element."""
 
