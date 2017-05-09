@@ -1,23 +1,4 @@
-# Copyright 2013, Michael H. Goldwasser
-#
-# Developed for use with the book:
-#
-#    Data Structures and Algorithms in Python
-#    Michael T. Goodrich, Roberto Tamassia, and Michael H. Goldwasser
-#    John Wiley & Sons, 2013
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+from TDP.TdP_collections.graphs.dfs import *
 
 class Graph:
     """Representation of a simple graph using an adjacency map."""
@@ -169,20 +150,28 @@ class Graph:
     def remove_edge(self, e):
         u, v = e.endpoints()
         del self._outgoing[u][v]
-        if self.is_directed():
-            del self._incoming[v][u]
+        del self._incoming[v][u]
             
     def remove_vertex(self, v):
-        oute = self.incident_edges(v, False)
-        for el in oute:
-            del self._outgoing[v][el.opposite(v)]
         if self.is_directed():
-            ine = self.incident_edges(v, True)
-            for el in ine:
-                del self._incoming[v][el.opposite(v)]
+            edges = self.incident_edges(v, False)
+            for e in edges:
+                del self._outgoing[e.opposite(v)][v]
+            del self._incoming[v]
+        edges = self.incident_edges(v)
+        for e in edges:
+            del self._incoming[e.opposite(v)][v]
+        del self._outgoing[v]
 
 
 
+
+
+    def print_edges(self):
+        for e in self.edges():
+            print(e)
+
+#Esercizio 1
 def load_graph(file, directed=False):
     """legge da file un grafo rappresentato dalla lista dei suoi archi e costruisce (e restituisce) un oggetto 
     della classe Graph. Gli archi sono rappresentati come triple (sorgente, destinazione, elemento=1), 
@@ -211,6 +200,52 @@ def load_graph(file, directed=False):
                 g.insert_edge(u,v,1)
     return g
 
+#Esercizio 3
+def components(g):
+    """preso in input un grafo non diretto g, restituisce un dizionario in cui le chiavi sono
+     i vertici del grafo ed i valori sono interi che identificano la componente connessa a cui
+      il vertice appartiene"""
+    if g.is_directed():
+        raise DirectedGraphError("La funzione supporta solo grafi non diretti")
+    dfs_trees = DFS_complete(g)
+    comp = {}
+    comp_count = 0
+    for tree in dfs_trees:
+        if dfs_trees[tree] is None:
+            comp_count += 1
+        comp[tree] = comp_count
+    return comp
+
+#Esercizio 4
+def find_cycle(g, u):
+    discovered = {}
+    DFS(g, u, discovered)
+    cycle = []
+    for e in g.incident_edges(u):
+        path = construct_path(e.opposite(u), u, discovered)
+        if path:
+            for i in range(len(path)):
+                cycle.append(g.get_edge(path[i-1],path[i]))
+            return cycle
+        return None
+
+class DirectedGraphError(Exception):
+
+    def __init__(self, value):
+        self._value = value
+
+    def __str__(self):
+        print(str(self._value))
+
+#Funzione sviluppata a fini di test
+def find_vertex(g, lbl):
+    """Funzione sviluppata a fini di test. Restituisce il vertice del grafo con la label lbl, None se il vertice 
+    non è stato trovato"""
+    for v in g.vertices():
+        if v.element() == lbl:
+            return v
+    return None
+
 
 if __name__ == '__main__':
     GRAPH = 'graph_undir.txt'
@@ -226,8 +261,6 @@ if __name__ == '__main__':
     print('vertex:', graph_undir.vertex_count())
     print('edge: ', graph_undir.edge_count())
 
-
-
     print('----------------hubs_dir.txt----------------')
     hubs_dir = load_graph(open(HUBS), True)
 
@@ -239,11 +272,10 @@ if __name__ == '__main__':
     print('----------------rhesus_edges.txt----------------')
     rhesus_edges = load_graph(open(RHESUS), True)
 
-    for e in hubs_dir.edges():
+    for e in rhesus_edges.edges():
         print(e)
     print('vertex:', rhesus_edges.vertex_count())
     print('edge: ', rhesus_edges.edge_count())
-
 
     print('----------------zebra_edges.txt----------------')
     zebra_edges = load_graph(open(ZEBRA))
@@ -253,3 +285,70 @@ if __name__ == '__main__':
     print('vertex:', zebra_edges.vertex_count())
     print('edge: ', zebra_edges.edge_count())
 
+    print('\n\n----------------Test Esercizio 2----------------')
+
+    print("Test su grafo INDIRETTO")
+    a = find_vertex(graph_undir, 'A')
+    b = find_vertex(graph_undir, 'B')
+    toRemove = graph_undir.get_edge(a,b)
+    print("eliminazione di: ", toRemove)
+    graph_undir.remove_edge(toRemove)
+    print("Edge eliminato con successo: ", toRemove not in graph_undir.edges())
+
+
+    toRemove = find_vertex(graph_undir,'A')
+    print("\n Eliminazione Vertice", toRemove)
+    graph_undir.remove_vertex(toRemove)
+    print("Vertice eliminato con successo: ", toRemove not in graph_undir.vertices())
+
+    print("\n\nTest su grafo DIRETTO")
+    a = find_vertex(hubs_dir, "BOS")
+    b = find_vertex(hubs_dir, "JFK")
+    toRemove = hubs_dir.get_edge(a,b)
+    hubs_dir.remove_edge(toRemove)
+    print("eliminazione di: ", toRemove)
+    print("Edge eliminato con successo: ", toRemove not in hubs_dir.edges())
+
+    toRemove = find_vertex(hubs_dir, 'JFK')
+    print("\n Eliminazione Vertice", toRemove)
+    hubs_dir.remove_vertex(toRemove)
+    print("Vertice eliminato con successo: ", toRemove not in hubs_dir.vertices())
+
+    print('\n\n----------------Test Esercizio 3----------------')
+    print("\n\n Componenti connesse di graph_undir")
+    c = components(graph_undir)
+    for k in c:
+        print(c[k], k)
+    print("\n\n Componenti connesse di zebra_edges")
+    c = components(zebra_edges)
+    for k in c:
+        print(c[k], k)
+    print('\n\n----------------Test Esercizio 4----------------')
+
+    rhesus_edges = load_graph(open(RHESUS), True)
+    print("ricerca ciclo in rhesus_edges:")
+    cycle = find_cycle(rhesus_edges, find_vertex(rhesus_edges,'6'))
+    print("Ciclo trovato: ", cycle is not None)
+    if cycle is not None:
+        for el in range(0,len(cycle)):
+            print(cycle[el])
+
+    hubs_dir = load_graph(open(HUBS), True)
+    vertex = find_vertex(hubs_dir, 'JFK')
+    print("ricerca ciclo in hubs_dir per ",vertex)
+    cycle = find_cycle(hubs_dir, vertex)
+    print("Ciclo trovato: ", cycle is not None)
+    if cycle is not None:
+        for el in range(0,len(cycle)):
+            print(cycle[el])
+    print('Eliminazione vertice BOS e ricerca di un nuovo ciclo')
+    hubs_dir.remove_vertex(find_vertex(hubs_dir,'BOS'))
+    print("Ciclo trovato: ", find_cycle(hubs_dir, vertex) is not None)
+
+    vertex = find_vertex(hubs_dir, 'LAX')
+    print("ricerca ciclo in hubs_dir per ",vertex)
+    cycle = find_cycle(hubs_dir, vertex)
+    print("Ciclo trovato: ", cycle is not None)
+    if cycle is not None:
+        for el in range(0,len(cycle)):
+            print(cycle[el])
