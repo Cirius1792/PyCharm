@@ -19,6 +19,7 @@ def edit_distance2(s1, s2):
 
     for i in range(1, m):
         prev, v[0] = v[0], i
+        
         for j in range(1, n):
             v[j] = min(min(v),prev if s1[i-1] == s2[j-1] else prev +1)
 
