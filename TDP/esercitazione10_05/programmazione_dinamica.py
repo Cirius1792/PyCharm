@@ -24,7 +24,6 @@ def edit_distance2(s1, s2):
             v[j], prev = min(prev if s1[i - 1] == s2[j - 1] else prev + 1,
                              v[j - 1] + 1,
                              v[j] + 1), v[j]
-
     return v[-1]
 
 def print_matrix(mtr):
@@ -34,10 +33,11 @@ def print_matrix(mtr):
             ln += str(i) + " "
         print(ln)
 
-s2 = "writers"
-s1 = "vintner"
-mtr = edit_distance(s1, s2)
-print_matrix(mtr)
+if __name__ == "__main__":
+    s2 = "writers"
+    s1 = "vintner"
+    mtr = edit_distance(s1, s2)
+    print_matrix(mtr)
 
-dist = edit_distance2(s1, s2)
-print(dist)
+    dist = edit_distance2(s1, s2)
+    print(dist)
