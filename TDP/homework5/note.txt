@@ -1,0 +1,13 @@
+Le informazioni relative ai grafi sono memorizzate nel formato
+  u v w 
+  u nodo iniziale
+  v nodo finale 
+  w peso sull'arco (u,v)
+
+Per grafo2.txt, Per ogni elemento u v w inserire nel grafo i nodi u e v 
+(se non sono già presenti) e gli archi (u,v) e (v, u) con peso w 
+
+grafo1.txt 26 vertici e 314 archi 
+grafo2.txt 43 vertici e 336 archi 
+grafo3.txt  8 vertici e  15 archi 
+grafo4.txt 43 vertici e 339 archi 

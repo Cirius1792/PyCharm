@@ -1,4 +1,6 @@
 
+import heapq
+
 def edit_distance(s1, s2):
     m, n = len(s1)+1, len(s2)+1
     d = [[0 for x in range(n)] for y in range(m)]
@@ -100,6 +102,8 @@ def knapsak(x, v, P):
                 a[i-1] = 0
     return d, a
 
+
+
 def print_matrix(mtr):
     for a in mtr:
         ln = ""
@@ -134,7 +138,3 @@ def test_knapsak():
     print("valore:\t\t\t", p)
     print("presi:\t\t\t", a)
 
-
-
-if __name__ == "__main__":
-    test_knapsak()
