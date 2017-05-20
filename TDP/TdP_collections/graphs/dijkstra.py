@@ -21,7 +21,7 @@ def shortest_path_lengths(g, src):
         for e in g.incident_edges(u):   # per tutti gli archi uscenti da u
             v = e.opposite(u)
             if v not in cloud:          # se v non è nella soluzione rilassa arco (u, v)
-                wgt = e.element()
+                wgt = float(e.element())
                 if d[u] + wgt < d[v]:
                     d[v] = d[u] + wgt
                     pq.update(pqlocator[v], d[v], v)  # aggiorna d[v] nella pq

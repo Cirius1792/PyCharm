@@ -6,15 +6,15 @@ class AdaptableHeapPriorityQueue(HeapPriorityQueue):
 # ------------------------------ nested Locator class ------------------------------
 
 
-class Locator(HeapPriorityQueue.Item):
+    class Locator(HeapPriorityQueue._Item):
 
-    """Token for locating an entry of the priority queue."""
-    slots = '_index'  # add index as additional field
+        """Token for locating an entry of the priority queue."""
+        slots = '_index'  # add index as additional field
 
 
-    def __init__(self, k, v, j):
-        super().init(k, v)
-        self.index = j
+        def __init__(self, k, v, j):
+            super().__init__(k, v)
+            self._index = j
 
     # ------------------------------ nonpublic behaviors ------------------------------
     # override swap to record new indices
@@ -24,14 +24,14 @@ class Locator(HeapPriorityQueue.Item):
         self._data[j]._index = j  # reset locator index (post-swap)
 
     def _bubble(self, j):
-        if j > 0 and self.data[j] < self.data[self.parent(j)]:
+        if j > 0 and self._data[j] < self._data[self._parent(j)]:
             self._upheap(j)
         else:
             self._downheap(j)
 
     def add(self, key, value):
         """Add a  key - value pair."""
-        token = self.Locator(key, value, len(self.data))  # initiaize locator index
+        token = self.Locator(key, value, len(self._data))  # initiaize locator index
         self._data.append(token)
         self._upheap(len(self._data)-1)
 #        self._upheap(len(self._data) − 1)
