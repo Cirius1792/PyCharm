@@ -4,6 +4,44 @@ from TDP.TdP_collections.priority_queue.heap_priority_queue import HeapPriorityQ
 from TDP.TdP_collections.tree.linked_binary_tree import LinkedBinaryTree
 from TDP.TdP_collections.graphs.graph import Graph
 
+def all_pair_ss(g):
+    n = len(g.vertices())
+    pred = [[None for u in range(len(g.vertices()) + 1)] for i in range(len(g.vertices()) + 1)]
+    d = [[0 for u in range(len(g.vertices())+1)] for i in range(len(g.vertices()) + 1)]
+    for i in range(0, len(g.vertices())+1):
+        d[i][0] = i
+        pred[i][0] = i
+    for i in range(0, len(g.vertices())+1):
+        d[0][i] = i
+        pred[0][i] = i
+
+    for u in range(1, n+1):
+        for v in range(1, n+1):
+            u_v = g.find_vertex(str(u))
+            v_v = g.find_vertex(str(v))
+            if u_v and v_v:
+                p = g.get_edge(u_v, v_v)
+                if p is None:
+                    d[u][v] = float('inf') if u != v else 0
+                    pred[u][v] = None
+                else:
+                    d[u][v] = float(p.element())
+
+    for k in range(1, n+1):
+        for i in range(1, n+1):
+            for j in range(1, n+1):
+                if d[i][k] + d[k][j] < d[i][j]:
+                    d[i][j] = d[i][k] + d[k][j]
+                    pred[i][j] = k
+    return d, pred
+
+def print_path(pred, u, v):
+    if pred[u][v] is None:
+        print(u,"\t -> \t",v)
+    else:
+        print_path(pred, u, pred[u][v])
+        print_path(pred, pred[u][v], v)
+
 def huffman(x):
     q = HeapPriorityQueue()
 
@@ -32,15 +70,23 @@ def huffman(x):
 
 def cycle_free(G):
     d = {}
+    cycle = False
+    for s in G.vertices():                          #Eseguo l'algoritmo di Bellam-Ford per ogni vertice
+        for v in G.vertices():
+            d[v] = 0 if v == s else float('inf')
+        for i in range(len(G.vertices())-1):
+            for e in G.edges():
+                u, v = e.endpoints()
+                wgt = float(e.element())
+                if d[u] + wgt < d[v]:
+                    d[v] = d[u] + wgt
 
-    for v in G.vertices():
-        d[v] = 0 if v == s else float('inf')
-    for i in range(len(G.vertices()) - 1):
-        for e in G.edges():
-            u, v = e.endpoints()
+        for e in G.edges():                         #Se alla fine dell'algoritmo è ancora possibile rilassare
+            u, v = e.endpoints()                    #un arco allora ci sono cicli di lunghezza negativa nel grafo
             wgt = float(e.element())
             if d[u] + wgt < d[v]:
-                d[v] = d[u] + wgt
+                return True
+    return cycle
 
 def bf_cycle_check(G, s):
     d = {}
@@ -127,33 +173,52 @@ def test_huffman():
     for k in dct:
         print("key:\t\t", k, "\tcode:\t\t", dct[k])
 
-def find_vertex(g, lbl):
-    """Funzione sviluppata a fini di test. Restituisce il vertice del grafo con la label lbl, None se il vertice 
-    non è stato trovato"""
-    for v in g.vertices():
-        if v.element() == lbl:
-            return v
-    return None
 
 
 def test_graph():
-    grp = load_graph(open('grafo_slide.txt'))
+    print("########################Grafo1########################")
+    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo1.txt'), True)
     print("numero di nodi:\t\t", len(grp.vertices()))
     print("numero di archi:\t\t", len(grp.edges()))
-    print("BELLMAN-FORD")
-    bf = BellmaFord(grp, find_vertex(grp,'B'))
-    for k in bf:
-        print("destinazione:\t",k,'  \tcosto:\t',bf[k])
-    print("\n\nDIJKSTRA")
-    d = shortest_path_lengths(grp, find_vertex(grp,'B'))
-    for k in d:
-        print("destinazione:\t",k,'  \tcosto:\t',d[k])
+    print("has cycle?\t", cycle_free(grp))
 
-    print("confronto fra i percorsi trovati con i due algoritmi:")
-    for k in grp.vertices():
-        print("vertice:\t",k," \tmatch:\t",d[k] == bf[k])
+    print("########################Grafo2########################")
+    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo2.txt'), False)
+    print("numero di nodi:\t\t", len(grp.vertices()))
+    print("numero di archi:\t\t", len(grp.edges()))
+    print("has cycle?\t", cycle_free(grp))
 
-    print("has cycle?\t", bf_cycle_check(grp, find_vertex(grp,'9')))
+    print("########################Grafo3########################")
+    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo3.txt'), True)
+    print("numero di nodi:\t\t", len(grp.vertices()))
+    print("numero di archi:\t\t", len(grp.edges()))
+    print("has cycle?\t", cycle_free(grp))
+
+    print("########################Grafo4########################")
+    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo4.txt'), True)
+    print("numero di nodi:\t\t", len(grp.vertices()))
+    print("numero di archi:\t\t", len(grp.edges()))
+    print("has cycle?\t", cycle_free(grp))
+
+def print_matrix(mtr):
+    for a in mtr:
+        ln = ""
+        for i in a:
+            ln += str(i) + " \t\t"
+        print(ln)
+
+
+def test_FW():
+
+    g = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo1.txt'), True)
+    d, pred = all_pair_ss(g)
+    print_matrix(d)
+    print_matrix(pred)
+    print_path(pred, 1,2)
 
 if __name__ == '__main__':
+    print("########################Test Grafi########################")
     test_graph()
+
+    print("########################Test Huffman########################")
+    test_huffman()

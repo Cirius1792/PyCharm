@@ -165,3 +165,11 @@ class Graph:
     e = self.Edge(u, v, x)
     self._outgoing[u][v] = e
     self._incoming[v][u] = e
+
+  def find_vertex(self, lbl):
+    """Funzione sviluppata a fini di test. Restituisce il vertice del grafo con la label lbl, None se il vertice 
+    non è stato trovato"""
+    for v in self.vertices():
+      if v.element() == lbl:
+        return v
+    return None
