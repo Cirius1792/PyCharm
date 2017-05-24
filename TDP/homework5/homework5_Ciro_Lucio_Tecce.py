@@ -6,6 +6,32 @@ from TDP.TdP_collections.graphs.graph import Graph
 
 def all_pair_ss(g):
     n = len(g.vertices())
+    d = {}
+    pred = {}
+
+    for v in g.vertices():                   #inizializzazione dei dizionari
+        d[v] = {}
+        pred[v] = {}
+
+    for u in g.vertices():                   #Inizializzazione della matrice dei precedenti
+        for v in g.vertices():
+            p = g.get_edge(u, v)
+            pred[u][v] = None
+            if p is None:
+                d[u][v] = float('inf') if u != v else 0
+            else:
+                d[u][v] = float(p.element())
+
+    for k in g.vertices():
+        for i in g.vertices():
+            for j in g.vertices():
+                if d[i][k] + d[k][j] < d[i][j]:
+                    d[i][j] = d[i][k] + d[k][j]
+                    pred[i][j] = k
+    return d, pred
+
+def all_pair_ss_v1(g):
+    n = len(g.vertices())
     pred = [[None for u in range(len(g.vertices()) + 1)] for i in range(len(g.vertices()) + 1)]
     d = [[0 for u in range(len(g.vertices())+1)] for i in range(len(g.vertices()) + 1)]
     for i in range(0, len(g.vertices())+1):
@@ -107,6 +133,7 @@ def bf_cycle_check(G, s):
     return cycle
 
 def charFreq(X):
+    "Restituisce un dizionario in cui la chiave è il carattere ed il valore è il numero di occorrenze"
     d = {}
     for c in X:
         if c in d:
@@ -117,12 +144,14 @@ def charFreq(X):
 
 
 def to_dict(ct):
+
     dct = {}
     _get_code(ct, dct)
     return dct
 
 
 def _get_code(ct, dct, p=None, c_str=""):
+    """Scorre l'albero ricorsivamente per ricostruire il codice associato al carattere"""
     if p is None:
         p = ct.root()
     left = ct.left(p)
@@ -135,6 +164,22 @@ def _get_code(ct, dct, p=None, c_str=""):
         _get_code(ct, dct, right, right_str)
     else:
         dct[p.element()] = c_str
+
+#Funzioni utilizzate per lo svolgimento dei test------------------------------------------------
+def print_matrix(mtr):
+    for a in mtr:
+        ln = ""
+        for i in a:
+            ln += str(i) + " \t\t"
+        print(ln)
+
+
+def print_dic(d):
+    for i in d:
+        txt = ""
+        for j in d[i]:
+            txt += str(d[i][j])+" \t\t\t"
+        print(txt)
 
 
 def load_graph(file, directed=False):
@@ -165,60 +210,80 @@ def load_graph(file, directed=False):
                 g.insert_edge(u, v, 1)
     return g
 
-
+#Funzioni di Test--------------------------------------------------------------------------------
 def test_huffman():
     x = "abracadabra"
+    print("parola: ",x)
     T = huffman(x)
     dct = to_dict(T)
+    l = 0
     for k in dct:
         print("key:\t\t", k, "\tcode:\t\t", dct[k])
+        l += len(dct[k])
+    print("lunghezza media parola codice: ", round(l/len(dct),2))
 
+    x = "aiuola"
+    print("parola: ",x)
+    T = huffman(x)
+    dct = to_dict(T)
+    l=0
+    for k in dct:
+        print("key:\t\t", k, "\tcode:\t\t", dct[k])
+        l += len(dct[k])
+    print("lunghezza media parola codice: ", round(l/len(dct),2))
+
+    x = "tre tigri contro tre tigri"
+    print("parola: ",x)
+    T = huffman(x)
+    dct = to_dict(T)
+    l=0
+    for k in dct:
+        print("key:\t\t", k, "\tcode:\t\t", dct[k])
+        l += len(dct[k])
+    print("lunghezza media parola codice: ", round(l/len(dct),2))
 
 
 def test_graph():
     print("########################Grafo1########################")
-    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo1.txt'), True)
+    grp = load_graph(open('grafo1.txt'), True)
     print("numero di nodi:\t\t", len(grp.vertices()))
     print("numero di archi:\t\t", len(grp.edges()))
     print("has cycle?\t", cycle_free(grp))
 
     print("########################Grafo2########################")
-    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo2.txt'), False)
+    grp = load_graph(open('grafo2.txt'), False)
     print("numero di nodi:\t\t", len(grp.vertices()))
     print("numero di archi:\t\t", len(grp.edges()))
     print("has cycle?\t", cycle_free(grp))
 
     print("########################Grafo3########################")
-    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo3.txt'), True)
+    grp = load_graph(open('grafo3.txt'), True)
     print("numero di nodi:\t\t", len(grp.vertices()))
     print("numero di archi:\t\t", len(grp.edges()))
     print("has cycle?\t", cycle_free(grp))
 
     print("########################Grafo4########################")
-    grp = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo4.txt'), True)
+    grp = load_graph(open('grafo4.txt'), True)
     print("numero di nodi:\t\t", len(grp.vertices()))
     print("numero di archi:\t\t", len(grp.edges()))
     print("has cycle?\t", cycle_free(grp))
 
-def print_matrix(mtr):
-    for a in mtr:
-        ln = ""
-        for i in a:
-            ln += str(i) + " \t\t"
-        print(ln)
-
 
 def test_FW():
 
-    g = load_graph(open('/Volumes/Mac-Drive/PyCharm/PyCharm/TDP/homework5/grafo1.txt'), True)
+    print("\n\n########################All_Pair_ss########################")
+    print("########################Test Grafo1########################")
+    g = load_graph(open('grafo1.txt'), True)
     d, pred = all_pair_ss(g)
-    print_matrix(d)
-    print_matrix(pred)
-    print_path(pred, 1,2)
+
+    u = g.find_vertex('1')
+    v = g.find_vertex('2')
+    print("percorso da u = ",u," a v = ",v,":")
+    print_path(pred, u,v)
 
 if __name__ == '__main__':
     print("########################Test Grafi########################")
     test_graph()
-
+    test_FW()
     print("########################Test Huffman########################")
     test_huffman()
