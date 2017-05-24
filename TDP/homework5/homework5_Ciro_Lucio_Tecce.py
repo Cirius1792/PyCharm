@@ -86,6 +86,7 @@ def cycle_free(G):
             wgt = float(e.element())
             if d[u] + wgt < d[v]:
                 return True
+            
     return cycle
 
 def bf_cycle_check(G, s):
