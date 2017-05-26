@@ -273,11 +273,11 @@ def test_FW():
 
     print("\n\n########################All_Pair_ss########################")
     print("########################Test Grafo1########################")
-    g = load_graph(open('grafo1.txt'), True)
+    g = load_graph(open('grafo_slide.txt'), True)
     d, pred = all_pair_ss(g)
 
-    u = g.find_vertex('1')
-    v = g.find_vertex('2')
+    u = g.find_vertex('3')
+    v = g.find_vertex('4')
     print("percorso da u = ",u," a v = ",v,":")
     print_path(pred, u,v)
 
