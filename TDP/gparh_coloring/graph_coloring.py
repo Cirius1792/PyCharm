@@ -11,7 +11,7 @@ def graph_coloring(G):
     for v in G.vertices():
         degv = G.degree(v) + G.degree(v,False) if G.is_directed() else G.degree(v)
         #degv = G.degree(v)
-        pq.add(degv, v)                         #Riordino i vertici per grado decrescente
+        pq.add(degv, v)                         #Riordino i vertici per grado crescente
 
     ku = set()
     k = 0
@@ -30,10 +30,17 @@ def graph_coloring(G):
             k += 1
             ku.add(k)
             color[u] = k
-    return color, len(ku)
+    return color
 
 def print_coloring(colors, g):
-    pass
+    n_color = 0
+    for v in colors:
+        print("vertice:\t\t\t ",v,"\t\tcolore: \t\t\t",colors[v])
+        n_color = max(colors[v],n_color)
+    for e in g.edges():
+        u,v = e.endpoints()
+        print(color[u],"\t ",e,"  \t",colors[v])
+    print("colori utilizzati: \t",n_color)
 
 def check_colors(G, color):
     for u in G.vertices():
@@ -74,21 +81,26 @@ def load_graph(file, directed=False):
     return g
 
 def max_degree(G):
-    max_deg = 0
+    max_deg_out = 0
+    max_deg_in = 0
     for v in G.vertices():
         degv = G.degree(v)
-        max_deg = max(max_deg, degv)
-
-    return max_deg
+        max_deg_out = max(max_deg_out, degv)
+        if G.is_directed():
+            degv = G.degree(v, False)
+            max_deg_in = max(max_deg_in, degv)
+    if G.is_directed():
+        print("max_deg_in:\t",max_deg_in,"max_deg_out:\t",max_deg_out)
+    else:
+        print("max_deg_out:\t",max_deg_out)
+    return max(max_deg_in,max_deg_out)
 
 
 if __name__ == '__main__':
     g = load_graph(open('grafo1.txt'), True)
-    color, k = graph_coloring(g)
-    D = max_degree(g)
-    for v in color:
-        print("vertice:\t ",v,"\t\t colore:\t ", color[v])
+    color= graph_coloring(g)
     print("check colors: ", check_colors(g, color))
+    D = max_degree(g)
     print("max degree:\t\t",D)
-    print("colors:\t\t\t",k)
-    print("k<D+1?\t\t",k<=D+1)
+    print("\nprint_coloring:")
+    print_coloring(color,g)
