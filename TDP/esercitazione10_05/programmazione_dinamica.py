@@ -91,7 +91,7 @@ def knapsak(x, v, P):
     for i in range(1,n):
         for j in range(1, P):
             if j >= x[i-1]:
-                if d[i - 1][j] > d[i - 1][j - x[i - 1]] + v[i - 1]:
+                if d[i - 1][j] > d[i][j - x[i - 1]] + v[i - 1]:
                     d[i][j] = d[i - 1][j]
                     a[i - 1] = 0
                 else:
@@ -138,3 +138,5 @@ def test_knapsak():
     print("valore:\t\t\t", p)
     print("presi:\t\t\t", a)
 
+if __name__ == '__main__':
+    test_knapsak()
