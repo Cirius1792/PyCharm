@@ -70,7 +70,6 @@ def print_path(pred, u, v):
 
 def huffman(x):
     q = HeapPriorityQueue()
-
     f = charFreq(x)
     count = 0
     tree = LinkedBinaryTree()

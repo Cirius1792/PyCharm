@@ -59,11 +59,9 @@ def print_edit_transfer(d):
 
 def coin_change(amount_rem, coin_combinations=[50, 20, 10, 5, 2, 1]):
 
-    #coin_combinations = [6, 2]
     coin_list = []
     for coin_val in coin_combinations:
         coin_count = amount_rem//coin_val
-        coin = coin_val * coin_count
         for i in range(int(coin_count)):
             coin_list.append(coin_val)
         amount_rem = round(amount_rem - coin_val * coin_count, 2)
@@ -71,6 +69,8 @@ def coin_change(amount_rem, coin_combinations=[50, 20, 10, 5, 2, 1]):
             return coin_list
     if amount_rem > 0:
         return []
+    else:
+        return coin_list
 
 def original_coin_change(amount_rem):
     coin_combinations = [50, 20, 10, 5, 2, 1]  # coin_combina9ons = [6, 2]
