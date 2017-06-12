@@ -1,7 +1,8 @@
-from TdP_collections.map.avl_tree import AVLTreeMap
+from TDP.TdP_collections.map.avl_tree import AVLTreeMap
 
 
 class AVLTreeMapHW(AVLTreeMap):
+
     def __contains__(self, k):
         """Restituisce True se è presente un elemento con chiave k"""
         if self.is_empty():
@@ -22,7 +23,8 @@ class AVLTreeMapHW(AVLTreeMap):
             if el.__class__.__name__ != key.__class__.__name__:
                 raise KeysMismatch('keys mismatch: ')
             elif el not in self:
-                self[el] = t2[el]
+                self[el] = t2[el]       #in questo modo il valore associato alle chiavi che già sono presenti dentro
+                                        # #l'albero non vengono mddificate e la specifica è rispettata
         return self
 
     def __lt__(self, other):
@@ -35,7 +37,7 @@ class AVLTreeMapHW(AVLTreeMap):
 
     def __truediv__(self, other):
         """t1 \ t2, rimuove da t1 tutti gli elementi le cui chiavi sono presenti in t2"""
-        l = []
+        l = []          #Non serve a niente, me la potevo risparmiare, sarà un'eredità di qualche versione precedente
         for el in other:
             if el in self:
                 del self[el]
@@ -209,4 +211,5 @@ def test2():
     print(b.n_balanced())
 
 
-test2()
+if __name__ == '__main__':
+    test2()
